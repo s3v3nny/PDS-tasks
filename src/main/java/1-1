@@ -1,0 +1,32 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class Main {
+
+    private static ArrayList<Character> getStorage(char[] symbols) {
+        ArrayList<Character> storage = new ArrayList<>();
+        storage.add(symbols[0]);
+        for (char symbol : symbols) {
+            if (!(storage.contains(symbol))) storage.add(symbol);
+        }
+
+        return storage;
+    }
+
+    public static void main(String args[]) {
+        Scanner input = new Scanner(System.in);
+        char[] symbols = input.nextLine().toCharArray();
+        List<Character> storage = getStorage(symbols);
+
+        storage = storage.stream()
+                .sorted()
+                .toList();
+
+        for(int i = 0; i < storage.size(); i++) {
+            if(i == storage.size() - 1) System.out.print(storage.get(i));
+            else System.out.print(storage.get(i) + " ");
+        }
+    }
+}
