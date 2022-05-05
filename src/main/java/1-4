@@ -1,0 +1,43 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class Main {
+
+    private static void printVector(List<Vector> list) {
+        System.out.print("{");
+
+        for (int i = 0; i < list.size(); i++) {
+            if (i == list.size() - 1) System.out.print(list.get(i).symbol);
+            else System.out.print(list.get(i).symbol + ",");
+        }
+
+        System.out.print("}");
+    }
+
+    private static ArrayList<Vector> getVector(char[] universum, char[] values) {
+        ArrayList<Vector> vectorList = new ArrayList<>();
+
+        for (int i = 0; i < universum.length; i++) {
+            if (values[i] == '1') {
+                Vector vector = new Vector(universum[i], values[i]);
+                vectorList.add(vector);
+            }
+        }
+
+        return vectorList;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+        char[] universum = input.nextLine().toCharArray();
+        char[] values = input.nextLine().toCharArray();
+
+        List<Vector> vector = getVector(universum, values);
+
+        printVector(vector);
+
+    }
+}

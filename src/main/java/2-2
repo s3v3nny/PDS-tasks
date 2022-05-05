@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+
+public class Main {
+
+    private static void printMultiple(ArrayList<Element> multipleList) {
+        int counter = 0;
+        for (Element e : multipleList) {
+            if (counter == multipleList.size() - 1) {
+                System.out.print("(" + e.x + ", " + e.y + ")");
+            } else {
+                System.out.print("(" + e.x + ", " + e.y + ") ");
+            }
+            counter++;
+        }
+    }
+
+    private static int[] getMultiple() {
+
+        Scanner input = new Scanner(System.in);
+        int grade = input.nextInt();
+        int[] multiple = new int[grade];
+
+        for (int i = 0; i < grade; i++) {
+            multiple[i] = input.nextInt();
+
+            for (int k = 0; k < i; k++) {
+                if (multiple[i] == multiple[k]) {
+                    System.out.print("Был введён повторяющийся элемент. Введите ещё число: ");
+                    i--;
+                }
+            }
+        }
+        return multiple;
+    }
+
+    public static ArrayList<Element> getMultiplePairs(int[] multiple) {
+        ArrayList<Element> multipleList = new ArrayList<>();
+        Element element;
+        for (int i = 0; i < multiple.length; i++)
+            for (int k = i + 1; k < multiple.length; k++) {
+                if (multiple[i] - 1 == multiple[k] * 2) {
+                    element = new Element(multiple[i], multiple[k]);
+                    multipleList.add(element);
+                }
+            }
+
+        return multipleList.stream()
+                .sorted(Comparator.comparing(Element::getX))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+
+    public static void main(String[] args) {
+
+        int[] multiple = getMultiple();
+        ArrayList<Element> multipleList = getMultiplePairs(multiple);
+
+        System.out.print("  |");
+
+        for (int i = 0; i < multiple.length; i++) {
+            if (i != multiple.length - 1) {
+                System.out.print(" " + multiple[i] + "|");
+            } else {
+                System.out.println(" " + multiple[i]);
+            }
+        }
+
+        for (int i = 0; i < multiple.length * 3 + 2; i++) {
+            System.out.print("-");
+        }
+
+        System.out.print("\n");
+
+        for (int i = 0; i < multiple.length; i++) {
+            System.out.print(" " + multiple[i] + "|");
+            for (int k = 0; k < multiple.length; k++) {
+                if (multipleList.contains(new Element(multiple[i], multiple[k])))
+                    System.out.print(" 1 ");
+                else System.out.print(" 0 ");
+            }
+            System.out.print("\n");
+        }
+
+    }
+}
