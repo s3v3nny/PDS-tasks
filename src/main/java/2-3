@@ -1,87 +1,61 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.*;
 
 
 public class Main {
 
-    private static void printMultiple(ArrayList<Element> multipleList) {
-        int counter = 0;
-        for (Element e : multipleList) {
-            if (counter == multipleList.size() - 1) {
-                System.out.print("(" + e.x + ", " + e.y + ")");
-            } else {
-                System.out.print("(" + e.x + ", " + e.y + ") ");
-            }
-            counter++;
-        }
-    }
-
-    private static boolean checkReflexivity(ArrayList<Element> multipleList) {
-
-        for(Element e : multipleList) {
-            if(!Objects.equals(e.x, e.y)) return false;
-        }
-        return true;
-    }
-
-    private static boolean checkSymmetry (ArrayList<Element> multipleList) {
-
-        for(Element e : multipleList) {
-            if(e.y - 1 != e.x * 2) return false;
-        }
-        return true;
-
-    }
-
-    private static boolean checkTransitivity (ArrayList<Element> multipleList) {
-        for(int i = 0; i < multipleList.size(); i++) {
-            if(!(multipleList.get(i).x - 1 == multipleList.get(i+1).x * 2)
-                    && i != multipleList.size() - 1) return false;
-
-        }
-        return true;
-    }
-
-    public static ArrayList<Element> getMultiplePairs(Integer[] multiple) {
-        ArrayList<Element> multipleList = new ArrayList<>();
-        Element element;
-        for (int i = 0; i < multiple.length; i++)
-            for (int k = i + 1; k < multiple.length; k++) {
-                if (multiple[i] - 1 == multiple[k] * 2) {
-                    element = new Element(multiple[i], multiple[k]);
-                    multipleList.add(element);
+    private static void checkProperties(int n, boolean[][] r) {
+        int one = 0, two = 0, three = 0, check = 0;
+        for (int i = 0; i < n; i++) {
+            if (r[i][i]) one++;
+            for (int j = 0; j < n; j++) {
+                if (r[i][j] == r[j][i]) two++;
+                if (r[i][j] && i != j) {
+                    for (int k = 0; k < n; k++) {
+                        if (r[j][k] && k != i && k != j) {
+                            check++;
+                            if (r[i][k]) three++;
+                        }
+                    }
                 }
             }
+        }
+        if (one == n || n < 2) System.out.println("Рефлексивно");
+        else if (one == 0) System.out.println("Aнтирефлексивно");
+        else System.out.println("Нерефлексивно");
 
-        return multipleList.stream()
-                .sorted(Comparator.comparing(Element::getX))
-                .collect(Collectors.toCollection(ArrayList::new));
+        two -= n;
+        if (two == (n * n - n) || n < 2) System.out.println("Симметрично");
+        else if (two == 0) System.out.println("Антисимметрично");
+        else System.out.println("Несимметрично");
+
+
+        if (three == check || n < 2) System.out.println("Транзитивно");
+        else System.out.println("Нетранзитивно");
     }
-
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         String[] multipleString = input.nextLine().split("\\|" + " ");
-        Integer[] multiple = new Integer[multipleString.length - 1];
 
-        for(int i = 0; i < multipleString.length; i++)
-            if(!" ".equals(multipleString[i])
-                    && !"  ".equals(multipleString[i])) multiple[i - 1] = Integer.parseInt(multipleString[i]);
+        int counter = 0;
 
+        for (int i = 0; i < multipleString.length; i++)
+            if (!" ".equals(multipleString[i])
+                    && !"  ".equals(multipleString[i])) counter++;
 
-        ArrayList<Element> multipleList = getMultiplePairs(multiple);
+        boolean[][] matrix = new boolean[counter][counter];
 
-        if(checkReflexivity(multipleList)) System.out.println("Рефлексивно");
-        else System.out.println("Антирефлексивно");
+        input.nextLine();
 
-        if(checkSymmetry(multipleList)) System.out.println("Симметрично");
-        else System.out.println("Антисимметрично");
+        for (int i = 0; i < counter; i++) {
+            multipleString = input.nextLine().split("\\|");
+            for (int k = 0; k < counter + 1; k++) {
+                if ("1".equals(multipleString[k].trim())) matrix[i][k - 1] = true;
+                if ("0".equals(multipleString[k].trim())) matrix[i][k - 1] = false;
+            }
 
-        if(checkTransitivity(multipleList)) System.out.println("Транзитивно");
-        else System.out.println("Нетранзитивно");
+        }
 
+        checkProperties(counter, matrix);
     }
 }
