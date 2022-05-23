@@ -10,7 +10,8 @@ public class Main {
         ArrayList<Character> storage = new ArrayList<>();
         for (char c : symbols) storage.add(c);
 
-        ListUtils.distinct(storage);
+        storage = ListUtils.distinct(storage);
+
         return storage.stream()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));

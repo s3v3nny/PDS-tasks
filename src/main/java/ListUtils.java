@@ -32,8 +32,8 @@ public class ListUtils {
         }
     }
 
-    public static void distinct(List<Character> list) {
-        ArrayList<Character> outputList = new ArrayList<>();
+    public static ArrayList<Character> distinct(List<Character> list) {
+        ArrayList<Character> outputList = new ArrayList<>(65536);
         int[] buffer = new int[65536];
 
         for (char c : list) {
@@ -43,7 +43,6 @@ public class ListUtils {
             }
         }
 
-        list = null;
-        list = outputList;
+        return outputList;
     }
 }
