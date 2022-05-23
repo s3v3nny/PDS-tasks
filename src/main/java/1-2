@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static ArrayList<Character> getStorage(char[] symbols) {
-        List<Character> storage = new ArrayList<>();
+        ArrayList<Character> storage = new ArrayList<>();
         for (char c : symbols) storage.add(c);
+
+        storage = ListUtils.distinct(storage);
         return storage.stream()
-                .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -24,7 +25,7 @@ public class Main {
 
     private static ArrayList<Character> subtract(List<Character> appended, List<Character> surname) {
 
-        surname.removeAll(appended);
+        ListUtils.removeAll(surname, appended);
 
         return surname.stream()
                 .sorted()
@@ -32,9 +33,10 @@ public class Main {
     }
 
     private static ArrayList<Character> append(List<Character> name, List<Character> middleName) {
-        name.addAll(middleName);
+
+        ListUtils.addAll(name, middleName);
+
         return name.stream()
-                .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
     }

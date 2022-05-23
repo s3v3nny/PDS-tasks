@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Main {
@@ -10,24 +13,53 @@ public class Main {
             }
     }
 
-    public static void main(String[] args) {
+    private static int[] getMultiple() {
+
         Scanner input = new Scanner(System.in);
-        String[] multipleString = input.nextLine().split(" ");
+        int grade = input.nextInt();
+        int[] multiple = new int[grade];
 
-        int n = multipleString.length;
+        for (int i = 0; i < grade; i++) {
+            multiple[i] = input.nextInt();
 
+            for (int k = 0; k < i; k++) {
+                if (multiple[i] == multiple[k]) {
+                    System.out.print("Был введён повторяющийся элемент. Введите ещё число: ");
+                    i--;
+                }
+            }
+        }
+        return multiple;
+    }
+
+    public static ArrayList<Element> getMultiplePairs(int[] multiple) {
+        ArrayList<Element> multipleList = new ArrayList<>();
+        Element element;
+        for (int k : multiple)
+            for (int j : multiple) {
+                if (k - 1 == j * 2) {
+                    element = new Element(k, j);
+                    multipleList.add(element);
+                }
+            }
+
+        return multipleList.stream()
+                .sorted(Comparator.comparing(Element::getX))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+
+    public static void main(String[] args) {
+
+        int[] multiple = getMultiple();
+        ArrayList<Element> multipleList = getMultiplePairs(multiple);
+
+        int n = multiple.length;
         boolean[][] matrix = new boolean[n][n];
 
-        for (int k = 0; k < n; k++) {
-            if ("1".equals(multipleString[k])) matrix[0][k] = true;
-            if ("0".equals(multipleString[k])) matrix[0][k] = false;
-        }
-
-        for (int i = 1; i < n; i++) {
-            multipleString = input.nextLine().split(" ");
-            for (int k = 0; k < n; k++) {
-                if ("1".equals(multipleString[k])) matrix[i][k] = true;
-                if ("0".equals(multipleString[k])) matrix[i][k] = false;
+        for (int i = 0; i < multiple.length; i++) {
+            for (int k = 0; k < multiple.length; k++) {
+                matrix[i][k] = multipleList.contains(new Element(multiple[i], multiple[k]));
             }
         }
 

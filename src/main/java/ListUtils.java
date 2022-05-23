@@ -45,4 +45,20 @@ public class ListUtils {
 
         return outputList;
     }
+
+    public static boolean vectorContains(List<Vector> list, Vector vector) {
+        for (Vector v : list) {
+            if (v.equals(vector)) return true;
+        }
+        return false;
+    }
+
+    public static int findIndex (List<Vector> list, Vector vector) {
+        for(int i = 0; i < list.size(); i++) {
+            if(vector.equals(list.get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

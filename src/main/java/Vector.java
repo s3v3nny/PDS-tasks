@@ -14,7 +14,7 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector vector = (Vector) o;
-        return symbol.equals(vector.symbol);
+        return symbol.equals(vector.symbol) && value.equals(vector.value);
     }
 
     @Override

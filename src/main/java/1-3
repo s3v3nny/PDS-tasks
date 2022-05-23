@@ -9,8 +9,10 @@ public class Main {
     private static ArrayList<Character> getStorage(char[] symbols) {
         List<Character> storage = new ArrayList<>();
         for (char c : symbols) storage.add(c);
+
+        storage = ListUtils.distinct(storage);
+
         return storage.stream()
-                .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -36,7 +38,7 @@ public class Main {
 
         for (char c : universum) {
             Vector vector;
-            if (list.contains(c)) {
+            if (ListUtils.contains(list, c)) {
                 vector = new Vector(c, '1');
             } else {
                 vector = new Vector(c, '0');
@@ -53,8 +55,9 @@ public class Main {
         universum.addAll(b);
         universum.addAll(c);
 
+        universum = ListUtils.distinct(universum);
+
         return universum.stream()
-                .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
 
@@ -63,8 +66,8 @@ public class Main {
     private static ArrayList<Vector> subtract(List<Vector> appended, List<Vector> surname) {
 
         for (Vector vector : appended) {
-            if (vector.value == '1' && surname.contains(vector))
-                surname.get(surname.indexOf(vector)).value = '0';
+            if (vector.value == '1' && ListUtils.vectorContains(surname, vector))
+                surname.get(ListUtils.findIndex(surname, vector)).value = '0';
         }
 
         return new ArrayList<>(surname);
@@ -73,8 +76,8 @@ public class Main {
     private static ArrayList<Vector> append(List<Vector> name, List<Vector> middleName) {
 
         for (Vector vector : middleName) {
-            if (vector.value == '1' && name.contains(vector))
-                name.get(name.indexOf(vector)).value = '1';
+            if (vector.value == '1' && ListUtils.vectorContains(name, vector))
+                name.get(ListUtils.findIndex(name, vector)).value = '1';
         }
 
 

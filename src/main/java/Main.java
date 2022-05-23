@@ -1,72 +1,85 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
 public class Main {
 
-    private static ArrayList<Character> getStorage(char[] symbols) {
-        ArrayList<Character> storage = new ArrayList<>();
-        for (char c : symbols) storage.add(c);
-
-        storage = ListUtils.distinct(storage);
-
-        return storage.stream()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
+    private static void getComposition(int n, boolean[][] r) {
+        for (int i = 0; i < n; i++)
+            for (int k = 0; k < n; k++) {
+                r[i][k] = r[i][k] & r[k][i];
+            }
     }
 
-    private static void print(List<Character> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (i == list.size() - 1) System.out.print(list.get(i));
-            else System.out.print(list.get(i) + " ");
+    private static int[] getMultiple() {
+
+        Scanner input = new Scanner(System.in);
+        int grade = input.nextInt();
+        int[] multiple = new int[grade];
+
+        for (int i = 0; i < grade; i++) {
+            multiple[i] = input.nextInt();
+
+            for (int k = 0; k < i; k++) {
+                if (multiple[i] == multiple[k]) {
+                    System.out.print("Был введён повторяющийся элемент. Введите ещё число: ");
+                    i--;
+                }
+            }
         }
+        return multiple;
     }
 
-    private static ArrayList<Character> subtract(List<Character> appended, List<Character> surname) {
+    public static ArrayList<Element> getMultiplePairs(int[] multiple) {
+        ArrayList<Element> multipleList = new ArrayList<>();
+        Element element;
+        for (int k : multiple)
+            for (int j : multiple) {
+                if (k - 1 == j * 2) {
+                    element = new Element(k, j);
+                    multipleList.add(element);
+                }
+            }
 
-        ListUtils.removeAll(surname, appended);
-
-        return surname.stream()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    private static ArrayList<Character> append(List<Character> name, List<Character> middleName) {
-
-        ListUtils.addAll(name, middleName);
-
-        return name.stream()
-                .sorted()
+        return multipleList.stream()
+                .sorted(Comparator.comparing(Element::getX))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        char[] surname = input.nextLine().toCharArray();
-        char[] name = input.nextLine().toCharArray();
-        char[] middleName = input.nextLine().toCharArray();
 
-        List<Character> nameStorage = getStorage(name);
-        List<Character> surnameStorage = getStorage(surname);
-        List<Character> middleNameStorage = getStorage(middleName);
+        int[] multiple = getMultiple();
+        ArrayList<Element> multipleList = getMultiplePairs(multiple);
 
-        print(surnameStorage);
-        System.out.println("");
-        print(nameStorage);
-        System.out.println("");
-        print(middleNameStorage);
-        System.out.println("");
+        int n = multiple.length;
+        boolean[][] matrix = new boolean[n][n];
 
-        nameStorage = append(nameStorage, middleNameStorage);
-        surnameStorage = subtract(nameStorage, surnameStorage);
+        for (int i = 0; i < multiple.length; i++) {
+            for (int k = 0; k < multiple.length; k++) {
+                matrix[i][k] = multipleList.contains(new Element(multiple[i], multiple[k]));
+            }
+        }
 
-        System.out.print("R={");
-        print(surnameStorage);
-        System.out.print("}");
+        for (boolean[] i : matrix) {
+            for (boolean k : i) {
+                if (k) System.out.print("1 ");
+                else System.out.print("0 ");
+            }
+            System.out.println();
+        }
 
+        getComposition(n, matrix);
+        System.out.print("-------\n");
 
+        for (boolean[] i : matrix) {
+            for (boolean k : i) {
+                if (k) System.out.print("1 ");
+                else System.out.print("0 ");
+            }
+            System.out.println();
+        }
     }
 }
