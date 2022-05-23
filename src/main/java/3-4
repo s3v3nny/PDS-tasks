@@ -3,8 +3,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static void work(int[] a, int n)
-    {
+    private static void nextElement(int[] a, int n) {
         for (int j = n - 2; j >= 0; j--) {
             if (a[j] < a[j + 1]) {
                 int k, min = 1001, p = 0;
@@ -17,14 +16,10 @@ public class Main {
                 int t = a[p];
                 a[p] = a[j];
                 a[j] = t;
-                for (int i = j + 1; i < n; i++) {
-                    for (int s = i + 1; s < n; s++) {
-                        if (a[i] > a[s]) {
-                            int f = a[s];
-                            a[s] = a[i];
-                            a[i] = f;
-                        }
-                    }
+                for (int i = j + 1; i < n - 1; i++) {
+                    int temp = a[i];
+                    a[i] = a[i + 1];
+                    a[i + 1] = temp;
                 }
                 break;
             }
@@ -38,7 +33,7 @@ public class Main {
         for (int i = 0; i < array.length; i++)
             array[i] = input.nextInt();
 
-        work(array, n);
+        nextElement(array, n);
 
         for (int i : array)
             System.out.print(i + " ");

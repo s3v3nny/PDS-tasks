@@ -1,44 +1,71 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Main {
 
-    private static void getComposition(int n, boolean[][] r) {
-        for (int i = 0; i < n; i++)
-            for (int k = 0; k < n; k++) {
-                r[i][k] = r[i][k] & r[k][i];
-            }
+    private static ArrayList<Character> getStorage(char[] symbols) {
+        ArrayList<Character> storage = new ArrayList<>();
+        for (char c : symbols) storage.add(c);
+
+        ListUtils.distinct(storage);
+        return storage.stream()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    private static void print(List<Character> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (i == list.size() - 1) System.out.print(list.get(i));
+            else System.out.print(list.get(i) + " ");
+        }
+    }
+
+    private static ArrayList<Character> subtract(List<Character> appended, List<Character> surname) {
+
+        ListUtils.removeAll(surname, appended);
+
+        return surname.stream()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static ArrayList<Character> append(List<Character> name, List<Character> middleName) {
+
+        ListUtils.addAll(name, middleName);
+
+        return name.stream()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        String[] multipleString = input.nextLine().split(" ");
+        char[] surname = input.nextLine().toCharArray();
+        char[] name = input.nextLine().toCharArray();
+        char[] middleName = input.nextLine().toCharArray();
 
-        int n = multipleString.length;
+        List<Character> nameStorage = getStorage(name);
+        List<Character> surnameStorage = getStorage(surname);
+        List<Character> middleNameStorage = getStorage(middleName);
 
-        boolean[][] matrix = new boolean[n][n];
+        print(surnameStorage);
+        System.out.println("");
+        print(nameStorage);
+        System.out.println("");
+        print(middleNameStorage);
+        System.out.println("");
 
-        for (int k = 0; k < n; k++) {
-            if ("1".equals(multipleString[k])) matrix[0][k] = true;
-            if ("0".equals(multipleString[k])) matrix[0][k] = false;
-        }
+        nameStorage = append(nameStorage, middleNameStorage);
+        surnameStorage = subtract(nameStorage, surnameStorage);
 
-        for (int i = 1; i < n; i++) {
-            multipleString = input.nextLine().split(" ");
-            for (int k = 0; k < n; k++) {
-                if ("1".equals(multipleString[k])) matrix[i][k] = true;
-                if ("0".equals(multipleString[k])) matrix[i][k] = false;
-            }
-        }
+        System.out.print("R={");
+        print(surnameStorage);
+        System.out.print("}");
 
-        getComposition(n, matrix);
 
-        for (boolean[] i : matrix) {
-            for (boolean k : i) {
-                if (k) System.out.print("1 ");
-                else System.out.print("0 ");
-            }
-            System.out.println();
-        }
     }
 }
