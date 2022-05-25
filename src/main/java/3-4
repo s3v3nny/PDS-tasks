@@ -3,27 +3,27 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static void nextElement(int[] a, int n) {
-        for (int j = n - 2; j >= 0; j--) {
-            if (a[j] < a[j + 1]) {
-                int k, min = 1001, p = 0;
-                for (k = j + 1; k < n; k++) {
-                    if (a[k] < min && a[k] > a[j]) {
-                        min = a[k];
-                        p = k;
-                    }
-                }
-                int t = a[p];
-                a[p] = a[j];
-                a[j] = t;
-                for (int i = j + 1; i < n - 1; i++) {
-                    int temp = a[i];
-                    a[i] = a[i + 1];
-                    a[i + 1] = temp;
-                }
-                break;
-            }
+    private static void swap(int[] a, int i, int k) {
+        int buffer = a[i];
+        a[i] = a[k];
+        a[k] = buffer;
+    }
+
+    private static void nextElement(int[] a) {
+        int i = a.length - 2;
+        while (a[i] > a[i + 1]) i--;
+        int k = a.length - 1;
+        while(a[k] <= a[i] && k > i) {
+            k--;
+            if(a[k] > a[i]) swap(a, i, k);
         }
+        k = a.length;
+        while(i + 1 < k - 1) {
+            swap(a, i + 1, k - 1);
+            i++;
+            k--;
+        }
+
     }
 
     public static void main(String[] args) {
@@ -33,7 +33,7 @@ public class Main {
         for (int i = 0; i < array.length; i++)
             array[i] = input.nextInt();
 
-        nextElement(array, n);
+        nextElement(array);
 
         for (int i : array)
             System.out.print(i + " ");

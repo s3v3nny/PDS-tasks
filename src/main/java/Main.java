@@ -1,85 +1,28 @@
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Random;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public class Main {
 
-    private static void getComposition(int n, boolean[][] r) {
-        for (int i = 0; i < n; i++)
-            for (int k = 0; k < n; k++) {
-                r[i][k] = r[i][k] & r[k][i];
-            }
-    }
-
-    private static int[] getMultiple() {
-
-        Scanner input = new Scanner(System.in);
-        int grade = input.nextInt();
-        int[] multiple = new int[grade];
-
-        for (int i = 0; i < grade; i++) {
-            multiple[i] = input.nextInt();
-
-            for (int k = 0; k < i; k++) {
-                if (multiple[i] == multiple[k]) {
-                    System.out.print("Был введён повторяющийся элемент. Введите ещё число: ");
-                    i--;
-                }
-            }
-        }
-        return multiple;
-    }
-
-    public static ArrayList<Element> getMultiplePairs(int[] multiple) {
-        ArrayList<Element> multipleList = new ArrayList<>();
-        Element element;
-        for (int k : multiple)
-            for (int j : multiple) {
-                if (k - 1 == j * 2) {
-                    element = new Element(k, j);
-                    multipleList.add(element);
-                }
-            }
-
-        return multipleList.stream()
-                .sorted(Comparator.comparing(Element::getX))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-
     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Random random = new Random();
 
-        int[] multiple = getMultiple();
-        ArrayList<Element> multipleList = getMultiplePairs(multiple);
+        int k = input.nextInt();
+        int n = input.nextInt();
+        int[] array = new int[n];
 
-        int n = multiple.length;
-        boolean[][] matrix = new boolean[n][n];
+        for (int i = 0; i < array.length; i++)
+            array[i] = i + 1;
 
-        for (int i = 0; i < multiple.length; i++) {
-            for (int k = 0; k < multiple.length; k++) {
-                matrix[i][k] = multipleList.contains(new Element(multiple[i], multiple[k]));
-            }
+        for (int i = k - 1; i >= 1; --i) {
+            int position = random.nextInt(n--);
+            int temp = array[i];
+            array[i] = array[position];
+            array[position] = temp;
         }
 
-        for (boolean[] i : matrix) {
-            for (boolean k : i) {
-                if (k) System.out.print("1 ");
-                else System.out.print("0 ");
-            }
-            System.out.println();
-        }
-
-        getComposition(n, matrix);
-        System.out.print("-------\n");
-
-        for (boolean[] i : matrix) {
-            for (boolean k : i) {
-                if (k) System.out.print("1 ");
-                else System.out.print("0 ");
-            }
-            System.out.println();
-        }
+        for (int i = 0; i < k; i++)
+            System.out.print(array[i] + " ");
     }
 }
